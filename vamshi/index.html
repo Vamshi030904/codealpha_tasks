@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f4f4f4; }
+        .container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 350px; width: 100%; }
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        input { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 100%; padding: 10px; border: none; background: #28a745; color: #fff; font-size: 16px; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #218838; }
+        .result { margin-top: 15px; font-size: 18px; }
+        .error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Age Calculator</h1>
+        <p>Please enter your date of birth:</p>
+        <input type="number" id="day" placeholder="Day (1-31)" min="1" max="31">
+        <input type="number" id="month" placeholder="Month (1-12)" min="1" max="12">
+        <input type="number" id="year" placeholder="Year (e.g. 1990)" min="1900">
+        <button onclick="calculateAge()">Calculate Age</button>
+        <p id="result" class="result"></p>
+    </div>
+    <script>
+        function calculateAge() {
+            const day = parseInt(document.getElementById('day').value);
+            const month = parseInt(document.getElementById('month').value) - 1; // Months are 0-based in JavaScript
+            const year = parseInt(document.getElementById('year').value);
+
+            const resultElement = document.getElementById('result');
+
+            // Validate inputs
+            if (isNaN(day) || isNaN(month) || isNaN(year) || year < 1900 || month < 0 || month > 11 || day < 1 || day > 31) {
+                resultElement.innerHTML = '<span class="error">Please enter a valid date. Ensure the day is between 1 and 31, month is between 1 and 12, and year is greater than 1900.</span>';
+                return;
+            }
+
+            // Create date and check if it's valid
+            const birthDate = new Date(year, month, day);
+            if (birthDate.getDate() !== day || birthDate.getMonth() !== month || birthDate.getFullYear() !== year) {
+                resultElement.innerHTML = '<span class="error">Invalid date. Please check your entries.</span>';
+                return;
+            }
+
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+
+            // Adjust if the birth date hasn't occurred yet this year
+            if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            resultElement.innerHTML = `You are <strong>${age}</strong> years old.`;
+        }
+    </script>
+</body>
+</html>
